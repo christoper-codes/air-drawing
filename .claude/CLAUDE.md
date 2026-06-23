@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ## Current Status
 - [x] Basic hand detection
-- [ ] Index finger drawing gesture
-- [ ] Closed fist erase gesture
-- [ ] Two-finger color switching
+- [x] Index finger drawing gesture
+- [x] Open hand erase gesture (clears full canvas)
+- [x] Two-finger color switching (6 colors, cycles with cooldown)
 ```
