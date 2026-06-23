@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# MediaPipe model
+hand_landmarker.task
+
+# Editor
+.vscode/
+.idea/
