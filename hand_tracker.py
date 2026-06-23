@@ -90,11 +90,10 @@ class HandTracker:
         ring_up = self._is_finger_extended(16, 14)
         return index_up and middle_up and not ring_up
 
-    def is_fist(self):
-        # All four fingertips must be below their base knuckle (MCP).
-        # MCP comparison is more reliable than PIP for occluded fist landmarks.
-        tip_mcp_pairs = [(8, 5), (12, 9), (16, 13), (20, 17)]
-        return bool(self.landmarks) and all(
-            self.landmarks[tip].y > self.landmarks[mcp].y
-            for tip, mcp in tip_mcp_pairs
+    def is_open_hand(self):
+        return (
+            self._is_finger_extended(8, 6)
+            and self._is_finger_extended(12, 10)
+            and self._is_finger_extended(16, 14)
+            and self._is_finger_extended(20, 18)
         )

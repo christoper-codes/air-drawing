@@ -3,6 +3,7 @@ import numpy as np
 from hand_tracker import HandTracker
 
 COLORS = [
+    (255, 255, 255),  # White
     (255, 80, 80),    # Blue
     (80, 255, 80),    # Green
     (80, 80, 255),    # Red
@@ -11,7 +12,6 @@ COLORS = [
 ]
 
 BRUSH_THICKNESS = 8
-ERASER_RADIUS = 50
 COLOR_SWITCH_COOLDOWN_FRAMES = 25
 
 
@@ -31,7 +31,7 @@ def draw_ui(frame, color, color_index, gesture_label):
     )
     cv2.putText(
         frame, f"Gesture: {gesture_label}",
-        (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 220, 255), 2,
+        (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2,
     )
     cv2.putText(
         frame, "1-finger: Draw | 2-finger: Color | Fist: Erase | Q: Quit",
@@ -73,13 +73,10 @@ def main():
         index_tip = tracker.get_landmark_position(frame, 8)
 
         gesture_label = "none"
-        if tracker.is_fist():
+        if tracker.is_open_hand():
             gesture_label = "erase"
             prev_point = None
-            palm = tracker.get_landmark_position(frame, 9)
-            if palm:
-                cv2.circle(canvas, palm, ERASER_RADIUS, (0, 0, 0), -1)
-                cv2.circle(frame, palm, ERASER_RADIUS, (120, 120, 120), 2)
+            canvas[:] = 0
 
         elif tracker.is_two_fingers_up() and color_switch_cooldown == 0:
             gesture_label = "color"
