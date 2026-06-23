@@ -4,11 +4,11 @@ from hand_tracker import HandTracker
 
 COLORS = [
     (255, 255, 255),  # White
-    (255, 80, 80),    # Blue
     (80, 255, 80),    # Green
+    (255, 255, 255),  # White
     (80, 80, 255),    # Red
+    (255, 80, 80),    # Blue
     (80, 255, 255),   # Yellow
-    (255, 80, 255),   # Magenta
 ]
 
 BRUSH_THICKNESS = 8
