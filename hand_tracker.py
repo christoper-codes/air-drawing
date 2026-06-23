@@ -91,9 +91,9 @@ class HandTracker:
         return index_up and middle_up and not ring_up
 
     def is_open_hand(self):
-        return (
-            self._is_finger_extended(8, 6)
-            and self._is_finger_extended(12, 10)
-            and self._is_finger_extended(16, 14)
-            and self._is_finger_extended(20, 18)
+        margin = 0.07
+        tip_pip_pairs = [(8, 6), (12, 10), (16, 14), (20, 18)]
+        return bool(self.landmarks) and all(
+            self.landmarks[tip].y < self.landmarks[pip].y - margin
+            for tip, pip in tip_pip_pairs
         )
