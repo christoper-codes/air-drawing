@@ -22,12 +22,16 @@ def overlay_canvas(frame, canvas):
     return cv2.add(background, canvas)
 
 
-def draw_ui(frame, color, color_index):
+def draw_ui(frame, color, color_index, gesture_label):
     h = frame.shape[0]
     cv2.circle(frame, (35, 35), 20, color, -1)
     cv2.putText(
         frame, f"{color_index + 1}/{len(COLORS)}", (65, 42),
         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2,
+    )
+    cv2.putText(
+        frame, f"Gesture: {gesture_label}",
+        (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 220, 255), 2,
     )
     cv2.putText(
         frame, "1-finger: Draw | 2-finger: Color | Fist: Erase | Q: Quit",
@@ -68,7 +72,9 @@ def main():
         current_color = COLORS[color_index]
         index_tip = tracker.get_landmark_position(frame, 8)
 
+        gesture_label = "none"
         if tracker.is_fist():
+            gesture_label = "erase"
             prev_point = None
             palm = tracker.get_landmark_position(frame, 9)
             if palm:
@@ -76,11 +82,13 @@ def main():
                 cv2.circle(frame, palm, ERASER_RADIUS, (120, 120, 120), 2)
 
         elif tracker.is_two_fingers_up() and color_switch_cooldown == 0:
+            gesture_label = "color"
             prev_point = None
             color_index = (color_index + 1) % len(COLORS)
             color_switch_cooldown = COLOR_SWITCH_COOLDOWN_FRAMES
 
         elif tracker.is_index_drawing() and index_tip:
+            gesture_label = "draw"
             if prev_point:
                 cv2.line(canvas, prev_point, index_tip, current_color, BRUSH_THICKNESS)
             prev_point = index_tip
@@ -89,7 +97,7 @@ def main():
             prev_point = None
 
         output = overlay_canvas(frame, canvas)
-        draw_ui(output, current_color, color_index)
+        draw_ui(output, current_color, color_index, gesture_label)
         cv2.imshow("Air Drawing", output)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
